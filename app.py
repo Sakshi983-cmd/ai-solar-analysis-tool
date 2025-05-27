@@ -1,55 +1,62 @@
+import asyncio
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 import streamlit as st
-import cv2
 from PIL import Image
+import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-from transformers import pipeline
-import io
+from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
 
-# LLM model 
-solar_llm = pipeline("text-generation", model="EleutherAI/gpt-neo-1.3B")
+# -------------------- Page Setup --------------------
+st.set_page_config(page_title="AI Solar Analysis", layout="centered")
 
-# Title
-st.title("☀️ Solar Rooftop Potential Analyzer - AI Assistant")
+st.title("☀️ AI-Powered Solar Rooftop Analysis")
+st.write("Upload an image of a rooftop to receive AI-generated solar feasibility insights.")
 
-# Upload section
-uploaded_file = st.file_uploader("Upload a rooftop image (satellite or aerial view)", type=["jpg", "png", "jpeg"])
+# -------------------- Model Setup --------------------
+@st.cache_resource
+def load_model():
+    model_name = "EleutherAI/gpt-neo-1.3B"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    return tokenizer, model
+
+tokenizer, model = load_model()
+
+# -------------------- Image Upload --------------------
+uploaded_file = st.file_uploader("📷 Upload Rooftop Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Original Image", use_container_width=True)
+    image = Image.open(uploaded_file).convert("RGB")
+    image = image.resize((400, 400))
+    st.image(image, caption="Uploaded Rooftop", use_column_width=True)
 
-    # Convert image to grayscale
-    gray_img = np.array(image.convert("L"))
-    st.image(gray_img, caption="Grayscale Image", use_container_width=True)
+    # -------------------- Image Processing --------------------
+    img_np = np.array(image)
+    gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
+    edges = cv2.Canny(gray, 50, 150)
+    rooftop_area = np.sum(edges > 0) / (400 * 400) * 100  # %
+    st.write(f"📐 Estimated rooftop edge coverage: **{rooftop_area:.2f}%**")
 
-    # Edge detection
-    edges = cv2.Canny(gray_img, 100, 200)
-    st.image(edges, caption="Edge Detection", use_container_width=True)
-
-    # Estimate rooftop area (based on white pixel count)
-    rooftop_area = np.sum(edges > 0)
-    height, width = edges.shape
-    total_area = height * width
-    area_ratio = rooftop_area / total_area
-    solar_score = round(area_ratio * 10, 2)
-
-    st.subheader("📐 Image Analysis")
-    st.write(f"Image Dimensions: {width} x {height} pixels")
-    st.write(f"Estimated Rooftop Area (pixels): {rooftop_area}")
-    st.write(f"Solar Potential Score: **{solar_score} / 10**")
-
-    # Generate LLM report
+    # -------------------- LLM Prompt --------------------
     prompt = (
-        f"This rooftop image has a detected usable area of {rooftop_area} pixels and a solar score of {solar_score}/10. "
-        "Based on this, provide suggestions for solar panel installation and estimate monthly savings, payback period, and total ROI over 25 years."
+        f"A 400x400 rooftop image shows {rooftop_area:.2f}% rooftop edge coverage. "
+        "The rooftop is flat with minimal obstruction. "
+        "Estimate solar panel capacity (kW), approximate energy generation per year (kWh), "
+        "expected cost, ROI, and payback period for installing solar panels."
     )
 
-    with st.spinner("Generating AI report..."):
-        ai_report = solar_llm(prompt, max_length=250, do_sample=True, temperature=0.7)[0]['generated_text']
+    inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=250)
+    st.write("🧠 Generating AI analysis...")
 
-    st.subheader("🧠 AI Assistant Report")
-    st.markdown(ai_report)
+    from transformers import TextGenerationPipeline
+    gen_pipeline = TextGenerationPipeline(model=model, tokenizer=tokenizer, device=-1)
 
-    st.markdown("---")
-    st.caption("🔒 No OpenAI key used — runs fully on open-source LLM (GPT-Neo)")
+    output = gen_pipeline(prompt, max_new_tokens=256, do_sample=True, temperature=0.7)[0]['generated_text']
+    
+    # -------------------- Result --------------------
+    st.subheader("📋 AI Report")
+    st.write(output)
