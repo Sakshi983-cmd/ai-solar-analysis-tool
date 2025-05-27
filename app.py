@@ -4,13 +4,17 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from io import BytesIO
+from llama_cpp import Llama  # Local LLM integration
 
-st.set_page_config(page_title="Solar Rooftop Analysis", layout="wide")
-st.title("☀️ AI-Powered Rooftop Solar Analysis Tool")
+# Initialize LLaMA model (update path as per your downloaded model)
+llm = Llama(model_path="models/llama-7b.ggmlv3.q4_0.bin")
+
+st.set_page_config(page_title="Solar Rooftop Analysis with Local LLM", layout="wide")
+st.title("☀️ AI-Powered Rooftop Solar Analysis Tool with Local LLM")
 
 st.markdown("""
 Upload a rooftop image (satellite or drone view) to get a simulated solar potential assessment.
-No OpenAI API key is required. Works fully offline using computer vision.
+Ask questions about solar panels and installation — answers powered by a local LLM, no API key required.
 """)
 
 uploaded_file = st.file_uploader("Upload a rooftop image (JPG/PNG)", type=["jpg", "jpeg", "png"])
@@ -62,6 +66,11 @@ _Note: Simulated data. Accuracy depends on precise shadow/angle/sunlight mapping
 """
     return to_bytes(pil_img), to_bytes(gray, cmap='gray'), to_bytes(edges, cmap='gray'), report
 
+# Function to query the local LLM
+def ask_local_llm(prompt):
+    response = llm(prompt, max_tokens=150)
+    return response['choices'][0]['text'].strip()
+
 if uploaded_file:
     pil_img = Image.open(uploaded_file).convert("RGB")
     st.success("Image uploaded successfully. Processing...")
@@ -76,6 +85,13 @@ if uploaded_file:
 
     st.subheader("Solar Potential Analysis")
     st.markdown(result)
+
+    st.subheader("Ask about Solar Panels & Installation")
+    user_question = st.text_input("Type your question here:")
+    if user_question:
+        with st.spinner("Generating answer..."):
+            answer = ask_local_llm(user_question)
+        st.markdown(f"**Answer:** {answer}")
 
     st.markdown("Developed for Solar Industry AI Assistant Internship ✅")
 else:
