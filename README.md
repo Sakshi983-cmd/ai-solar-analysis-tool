@@ -2,38 +2,52 @@
 
 A smart web application that analyzes rooftop images to assess solar panel installation potential using Vision AI and an open-source Large Language Model (LLM).
 
-🔗 **Live App:** [Click to Try the App](https://your-streamlit-link.streamlit.app)  
+🔗 **Live App:** [  https://ai-solar-analysis-tool-3garddilm74qkkhlicqghf.streamlit.app/]
 🧠 **LLM Used:** GPT-Neo 1.3B (Open-source, no API key needed)
 
 ---
 
-## 🚀 Project Objective
+# # Solar Industry AI Assistant
 
-This project fulfills all requirements for a Solar Industry AI Internship Assessment:
-
-- 📷 **Vision AI** for rooftop analysis
-- 📋 **Prompt Engineering** for structured output
-- 🧠 **LLM Integration** (GPT-Neo) for solar suggestions, ROI, and savings
-- 🧰 **Streamlit Interface** for clean user interaction
-- 🧾 **ROI & Cost Analysis** with confidence scores
+**AI-powered rooftop analysis tool to assess solar panel installation potential**
 
 ---
 
-## 🧠 Technologies Used
+## Project Overview
 
-| Purpose                 | Tool                         |
-|------------------------|------------------------------|
-| Frontend               | Streamlit                    |
-| Image Processing       | OpenCV, PIL, Matplotlib      |
-| LLM Text Generation    | HuggingFace Transformers     |
-| Model                  | GPT-Neo 1.3B (Open-source)   |
-| Deployment             | Streamlit Cloud / GitHub     |
+This app analyzes satellite images of rooftops to estimate the potential for solar panel installation. It provides information about installation, maintenance, costs, and expected return on investment (ROI).
+
+The app is built using Streamlit and includes AI features to help users make informed decisions.
 
 ---
 
-## 🔧 Setup Instructions
+## How to Use
 
-1. Clone this repository  
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
+1. Open the Streamlit app  
+2. Upload a satellite image of your rooftop.  
+3. Click the "Analyze" button.  
+4. View the solar installation recommendations and ROI estimates.
+
+---
+
+
+
+---
+
+## Project Files
+
+- `app.py` — 
+- `requirements.txt` — 
+- `README.md` — 
+
+---
+
+## Setup Instructions (Optional, if you want to run locally)
+
+1. Install Python (version 3.8 or higher).  
+2. Install dependencies by running:  
+## Future Improvement 
+**Real-time Vision AI Integration:** Automate rooftop analysis using advanced computer vision models for more accurate and faster results.  
+**LLM-powered Recommendations:** Use Large Language Models (like OpenAI GPT) to generate personalized solar installation suggestions and answer user queries interactively.
+
+  
