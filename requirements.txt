@@ -1,5 +1,5 @@
 streamlit
 transformers>=4.28.0
 torch
-opencv-python
+opencv-python-headless
 Pillow
