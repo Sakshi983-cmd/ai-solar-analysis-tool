@@ -1,29 +1,39 @@
-# ai-solar-analysis-tool
-🌞 AI-powered rooftop solar analysis tool built with Streamlit. Upload a rooftop image and get simulated solar potential, installation suggestions, and ROI estimates — no OpenAI API required. Developed for the Solar Industry AI Assistant Internship.
-# ☀️ AI-Powered Rooftop Solar Analysis Tool
+# ☀️ AI-Powered Solar Rooftop Analyzer
 
-This project was built for the **Solar Industry AI Assistant Internship**. It uses computer vision to simulate solar potential analysis of rooftops from satellite or drone images.
+A smart web application that analyzes rooftop images to assess solar panel installation potential using Vision AI and an open-source Large Language Model (LLM).
 
-### 🔍 Features
-
-- Upload rooftop images (JPG/PNG)
-- Image preprocessing (grayscale + edge detection)
-- Simulated solar potential score
-- Installation recommendation (panel fit, shadow caution)
-- Estimated ROI (payback period, lifetime savings)
-- Built using **Streamlit**, no API keys required
-
-### 🚀 How to Run
-
-1. Clone the repo  
-2. Install dependencies: `pip install -r requirements.txt`  
-3. Run: `streamlit run app.py`
-
-### 📷 Example Use Case
-
-> Upload a top-down rooftop image.  
-> Get edge detection, area estimation, and a report with ROI and solar panel advice.
+🔗 **Live App:** [Click to Try the App](https://your-streamlit-link.streamlit.app)  
+🧠 **LLM Used:** GPT-Neo 1.3B (Open-source, no API key needed)
 
 ---
 
-Made with ❤️ for a greener future 🌍
+## 🚀 Project Objective
+
+This project fulfills all requirements for a Solar Industry AI Internship Assessment:
+
+- 📷 **Vision AI** for rooftop analysis
+- 📋 **Prompt Engineering** for structured output
+- 🧠 **LLM Integration** (GPT-Neo) for solar suggestions, ROI, and savings
+- 🧰 **Streamlit Interface** for clean user interaction
+- 🧾 **ROI & Cost Analysis** with confidence scores
+
+---
+
+## 🧠 Technologies Used
+
+| Purpose                 | Tool                         |
+|------------------------|------------------------------|
+| Frontend               | Streamlit                    |
+| Image Processing       | OpenCV, PIL, Matplotlib      |
+| LLM Text Generation    | HuggingFace Transformers     |
+| Model                  | GPT-Neo 1.3B (Open-source)   |
+| Deployment             | Streamlit Cloud / GitHub     |
+
+---
+
+## 🔧 Setup Instructions
+
+1. Clone this repository  
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
