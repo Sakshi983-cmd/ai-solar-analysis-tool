@@ -2,8 +2,8 @@
 
 A smart web application that analyzes rooftop images to assess solar panel installation potential using Vision AI and an open-source Large Language Model (LLM).
 
-🔗 **Live App:** [  https://ai-solar-analysis-tool-3garddilm74qkkhlicqghf.streamlit.app/]
-🧠 **LLM Used:** GPT-Neo 1.3B (Open-source, no API key needed)
+🔗 **Live App:**  https://ai-solar-analysis-tool-3garddilm74qkkhlicqghf.streamlit.app/
+🧠 **LLM Used:** 🧠 distilgpt2 (Open-source, no API key needed)
 
 ---
 
