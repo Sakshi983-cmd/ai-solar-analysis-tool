@@ -1,50 +1,50 @@
 import streamlit as st
 from PIL import Image
+from transformers import pipeline
 
-def get_dummy_analysis():
-    # Ye dummy data aapke AI response jaisa lagega
-    return {
-        "solar_potential": "Estimated 4500 kWh/year",
-        "panel_recommendation": "20 pcs of 320W Monocrystalline panels",
-        "installation_steps": "Roof inspection, mounting, electrical wiring, permits",
-        "maintenance_tips": "Quarterly cleaning, yearly inspection, monitor via app",
-        "cost_roi": "Approx cost $12,000, payback period 6 years, ROI 15%",
-        "regulations": "Compliant with local net metering rules and safety standards",
-        "confidence_score": "High (92%)"
-    }
+# Load GPT-Neo model (open-source, no API key needed)
+generator = pipeline("text-generation", model="EleutherAI/gpt-neo-1.3B")
 
+# Placeholder for rooftop area estimation (Vision AI can be added later)
+def estimate_rooftop_area(image):
+    # Future: Use segmentation model here
+    return "Approx. 120 sq meters"
+
+# Generate LLM-based solar analysis
+def get_llm_analysis(area="120 sq meters"):
+    prompt = f"""
+    Suggest a solar installation plan for a rooftop of {area}.
+    Include:
+    - Estimated solar potential (kWh/year)
+    - Panel recommendation
+    - Installation steps
+    - Maintenance tips
+    - Cost & ROI
+    - Regulatory compliance
+    - Confidence score
+    """
+    response = generator(prompt, max_length=300, do_sample=True, temperature=0.7)[0]['generated_text']
+    return response
+
+# Streamlit UI
 def main():
-    st.title("Solar Industry AI Assistant (Demo without API key)")
-    st.write("Upload rooftop satellite image and get dummy solar installation assessment.")
+    st.title("☀️ Solar Industry AI Assistant (GPT-Neo Powered)")
+    st.write("Upload a rooftop satellite image to get AI-generated solar installation recommendations.")
 
     uploaded_file = st.file_uploader("Upload rooftop satellite image", type=["png", "jpg", "jpeg"])
     if uploaded_file:
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_column_width=True)
-        
+        st.image(image, caption="Uploaded Rooftop Image", use_column_width=True)
+
         if st.button("Analyze Rooftop"):
-            st.info("Showing dummy analysis (No API used)")
-            result = get_dummy_analysis()
-            st.subheader("Solar Potential")
-            st.write(result["solar_potential"])
+            st.info("Analyzing rooftop using GPT-Neo...")
+            area = estimate_rooftop_area(image)
+            st.subheader("Estimated Rooftop Area")
+            st.write(area)
 
-            st.subheader("Panel Recommendation")
-            st.write(result["panel_recommendation"])
-
-            st.subheader("Installation Steps")
-            st.write(result["installation_steps"])
-
-            st.subheader("Maintenance Tips")
-            st.write(result["maintenance_tips"])
-
-            st.subheader("Cost & ROI")
-            st.write(result["cost_roi"])
-
-            st.subheader("Regulations")
-            st.write(result["regulations"])
-
-            st.subheader("Confidence Score")
-            st.write(result["confidence_score"])
+            result_text = get_llm_analysis(area)
+            st.subheader("LLM-Based Solar Recommendation")
+            st.write(result_text)
 
 if __name__ == "__main__":
     main()
